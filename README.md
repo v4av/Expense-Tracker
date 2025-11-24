@@ -1,1 +1,39 @@
-Simple Expense TrackerCourse: Build Your Own ProjectStudent Name: [Your Name Here]OverviewThe Expense Tracker is a Single Page Application (SPA) designed to help users manage their personal finances. Unlike complex banking apps, this project focuses on simplicity and speed. It allows users to manually log their income and expenses to keep track of their current financial balance.FeaturesSecure Login: Uses Firebase Authentication to keep user data separate.Dashboard: Instantly calculates Total Balance, Income, and Expenses.Categorization: Users can tag expenses (e.g., Food, Travel) for better tracking.Cloud Storage: All data is stored in Google Firebase Firestore.Visual Stats: Includes a dynamic progress bar chart to visualize spending habits.Technologies UsedHTML5 & CSS3: For the layout and structure.React.js (via CDN): For the application logic and state management.Tailwind CSS (via CDN): For styling and responsive design.Firebase: Backend-as-a-Service (BaaS) for Database and Authentication.How to Install & RunSince this project was built to be lightweight, it does not require npm or node_modules installation.Download: Clone this repository or download the index.html file.Setup Server: Because of Firebase security rules, you cannot just double-click the file. You must run it on a local server.Method A (VS Code): Install the "Live Server" extension, right-click index.html, and select "Open with Live Server".Method B (Python): Open terminal in the folder and run python -m http.server.Access: Open your browser and go to http://127.0.0.1:5500 (or the port shown by your server).Testing InstructionsLogin: Enter any name (e.g., "TestUser") to create a session.Add Income: Use the form to add an Income of $1000.Add Expense: Add an Expense of $100 for "Food".Verify: Check that the Balance card updates to $900.Delete: Click the delete icon on the expense and verify the balance returns to $1000.
+Simple Expense Tracker
+
+Course: Build Your Own Project
+
+Student Name: Vaibhav Moriya
+
+Overview
+The Expense Tracker is a Single Page Application (SPA) designed to help users manage their personal finances. Unlike complex banking apps, this project focuses on simplicity and speed. It allows users to manually log their income and expenses to keep track of their current financial balance.
+Features
+
+Secure Login: Uses Firebase Authentication to keep user data separate.
+
+Dashboard: Instantly calculates Total Balance, Income, and Expenses.
+
+Categorization: Users can tag expenses (e.g., Food, Travel) for better tracking.
+
+Cloud Storage: All data is stored in Google Firebase Firestore.
+
+Visual Stats: Includes a dynamic progress bar chart to visualize spending habits.
+Technologies Used
+
+HTML5 & CSS3: For the layout and structure.
+
+React.js (via CDN): For the application logic and state management.
+
+Tailwind CSS (via CDN): For styling and responsive design.
+
+Firebase: Backend-as-a-Service (BaaS) for Database and Authentication.
+Testing Instructions
+
+Login: Enter any name (e.g., "TestUser") to create a session.
+
+Add Income: Use the form to add an Income of 1000 rupees.
+
+Add Expense: Add an Expense of 100 rupees for "Food".
+
+Verify: Check that the Balance card updates to 900 rupees.
+
+Delete: Click the delete icon on the expense and verify the balance returns to 1000 rupees.

@@ -28,7 +28,7 @@ Tailwind CSS (via CDN): For styling and responsive design.
 Firebase: Backend-as-a-Service (BaaS) for Database and Authentication.
 Testing Instructions
 
-Login: Enter any name (e.g., "TestUser") to create a session.
+Login: Enter any name (e.g., "ABC") to create a session.
 
 Add Income: Use the form to add an Income of 1000 rupees.
 

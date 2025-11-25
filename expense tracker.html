@@ -1,486 +1,427 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Expense Tracker</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Chart js library -->
+    <title>My Expense Tracker</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            padding: 20px;
+        /* Basic reset */
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #e9ecef; 
+            padding: 20px; 
         }
 
-        /* Login styles */
-        .login-wrapper {
-            max-width: 400px;
-            margin: 50px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Login box styles */
+        .auth-container { 
+            width: 100%; 
+            max-width: 380px; 
+            margin: 60px auto; 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
             text-align: center;
         }
-
-        .login-wrapper input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
         }
 
-        .login-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .toggle-link {
-            display: block;
-            margin-top: 15px;
-            color: #007bff;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .error-msg {
-            color: red;
-            margin-top: 10px;
-            font-size: 14px;
-            display: none;
-        }
-
-        /* Dashboard styles (hidden by default) */
-        #dashboardSection {
-            display: none;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .logout-btn {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Existing styles below */
-        .main-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .col {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 95%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button#addBtn {
-            margin-top: 20px;
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745; 
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .main-btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: #4a90e2; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
             font-size: 16px;
         }
+        .main-btn:hover { background: #357abd; }
 
-        button#addBtn:hover {
-            background-color: #218838;
+        .link-text { 
+            color: #4a90e2; 
+            cursor: pointer; 
+            font-size: 0.9em; 
+            margin-top: 10px; 
+            display: inline-block;
         }
 
-        table {
-            width: 100%;
-            margin-top: 15px;
-            border-collapse: collapse;
+        /* App styles */
+        #app-area { display: none; max-width: 900px; margin: 0 auto; }
+        
+        .top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+        }
+        
+        .logout-btn { 
+            background: #e74c3c; 
+            color: white; 
+            border: none; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
         }
 
-        th {
-            background-color: #eee;
-            text-align: left;
-            padding: 10px;
+        .grid-container { display: flex; flex-wrap: wrap; gap: 20px; }
+        .card { 
+            flex: 1; 
+            min-width: 300px; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
         }
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .del-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
+        label { font-size: 0.9em; color: #555; margin-bottom: 5px; display: block; }
+        
+        .add-btn { 
+            background: #27ae60; 
+            color: white; 
+            width: 100%; 
+            padding: 10px; 
+            border: none; 
+            border-radius: 5px; 
+            margin-top: 10px; 
             cursor: pointer;
         }
 
-        .center-text {
-            text-align: center;
-            margin-top: 20px;
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; background: #f8f9fa; padding: 10px; border-bottom: 2px solid #ddd; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        
+        .del-btn { 
+            background: #ff6b6b; 
+            color: white; 
+            border: none; 
+            padding: 5px 10px; 
+            border-radius: 3px; 
+            cursor: pointer; 
+        }
+
+        #loading-screen {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #fff; z-index: 999;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5em; color: #666;
         }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN / REGISTER SECTION -->
-    <div id="loginSection" class="login-wrapper">
-        <h2 id="formTitle">Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button class="login-btn" onclick="handleAuth()" id="authBtn">Login</button>
-        <p class="error-msg" id="loginError">Invalid details</p>
+    <div id="loading-screen">Starting up...</div>
+
+    <div id="login-view" class="auth-container">
+        <h2 id="header-title">Login</h2>
+        <input type="text" id="user_input" placeholder="Username">
+        <input type="password" id="pass_input" placeholder="Password">
         
-        <span class="toggle-link" onclick="toggleForm()" id="toggleText">Need an account? Register</span>
+        <button class="main-btn" py-click="try_auth">Submit</button>
+        
+        <p id="error-txt" style="color: red; display: none; margin-top: 10px;"></p>
+        <span class="link-text" py-click="switch_mode" id="mode-switch">Create an account</span>
     </div>
 
-    <!-- MAIN DASHBOARD (Hidden initially) -->
-    <div id="dashboardSection">
-        <div class="main-container">
-            <div class="header-row">
-                <h1>Expense Manager</h1>
-                <button class="logout-btn" onclick="logout()">Logout (<span id="displayUser"></span>)</button>
+    <div id="app-area">
+        <div class="top-bar">
+            <h2>Wallet Tracker</h2>
+            <button class="logout-btn" py-click="do_logout">Logout (<span id="user-display"></span>)</button>
+        </div>
+
+        <div class="grid-container">
+            <div class="card">
+                <h3>New Entry</h3>
+                <label>What did you buy?</label>
+                <input type="text" id="desc_field">
+                
+                <label>Cost</label>
+                <input type="number" id="amt_field" placeholder="0.00">
+                
+                <label>Type</label>
+                <select id="cat_field" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="Food">Food</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label>When?</label>
+                <input type="date" id="date_field">
+                
+                <button class="add-btn" py-click="save_item">Add Expense</button>
             </div>
 
-            <div class="row">
-                <!-- Form -->
-                <div class="col">
-                    <h3>Add Expense</h3>
-                    <form id="myForm">
-                        <label>Description:</label>
-                        <input type="text" id="desc" required placeholder="What did you buy?">
-
-                        <label>Amount:</label>
-                        <input type="number" id="amt" required placeholder="0.00">
-
-                        <label>Category:</label>
-                        <select id="cat">
-                            <option value="Food">Food</option>
-                            <option value="Travel">Travel</option>
-                            <option value="Shopping">Shopping</option>
-                            <option value="Bills">Bills</option>
-                            <option value="Other">Other</option>
-                        </select>
-
-                        <label>Date:</label>
-                        <input type="date" id="dt" required>
-
-                        <button type="submit" id="addBtn">Add to List</button>
-                    </form>
-                </div>
-
-                <!-- Chart -->
-                <div class="col">
-                    <h3>Statistics</h3>
-                    <canvas id="myChart" style="max-height: 300px;"></canvas>
-                    <div class="center-text">
-                        <h2>Total: $<span id="totalValue">0</span></h2>
-                    </div>
+            <div class="card">
+                <h3>Overview</h3>
+                <canvas id="chartCanvas" style="max-height: 250px;"></canvas>
+                <div style="text-align: center; margin-top: 15px;">
+                    <h2 style="color: #27ae60;">Total: $<span id="grand-total">0.00</span></h2>
                 </div>
             </div>
+        </div>
 
-            <!-- List -->
-            <div class="col" style="margin-top: 20px;">
-                <h3>History</h3>
-                <table id="myTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Item</th>
-                            <th>Category</th>
-                            <th>Cost</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableData">
-                        <!-- data goes here -->
-                    </tbody>
-                </table>
-                <p id="noDataMsg" style="text-align: center; color: gray;">No expenses added yet.</p>
-            </div>
+        <div class="card" style="margin-top: 20px;">
+            <h3>Transactions</h3>
+            <table id="expense-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+            <div id="empty-msg" style="text-align: center; padding: 20px; color: #888;">No data yet</div>
         </div>
     </div>
 
     <script>
-        // --- AUTHENTICATION VARIABLES ---
-        var isLoginMode = true; // true = login, false = register
-        var currentUser = null; // keeps track of who is logged in
+        let myPieChart = null;
 
-        // --- EXPENSE VARIABLES ---
-        var expenseList = [];
-        var myChart;
-
-        // --- AUTH FUNCTIONS ---
-
-        // check if user is already logged in (basic session)
-        var savedUser = localStorage.getItem('activeUser');
-        if (savedUser) {
-            currentUser = savedUser;
-            showDashboard();
-        }
-
-        function toggleForm() {
-            var title = document.getElementById('formTitle');
-            var btn = document.getElementById('authBtn');
-            var toggle = document.getElementById('toggleText');
-            var err = document.getElementById('loginError');
-
-            err.style.display = 'none'; // hide errors
-
-            if (isLoginMode) {
-                // switch to register
-                title.innerText = "Register";
-                btn.innerText = "Sign Up";
-                toggle.innerText = "Have an account? Login";
-                isLoginMode = false;
-            } else {
-                // switch to login
-                title.innerText = "Login";
-                btn.innerText = "Login";
-                toggle.innerText = "Need an account? Register";
-                isLoginMode = true;
-            }
-        }
-
-        function handleAuth() {
-            var u = document.getElementById('username').value;
-            var p = document.getElementById('password').value;
-            var err = document.getElementById('loginError');
-
-            if (!u || !p) {
-                err.innerText = "Please fill all fields";
-                err.style.display = 'block';
-                return;
-            }
-
-            // get existing users list from local storage
-            var allUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-            if (isLoginMode) {
-                // LOGIN LOGIC
-                var found = false;
-                for (var i = 0; i < allUsers.length; i++) {
-                    if (allUsers[i].name === u && allUsers[i].pass === p) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) {
-                    currentUser = u;
-                    localStorage.setItem('activeUser', u); // save session
-                    showDashboard();
-                } else {
-                    err.innerText = "Wrong username or password";
-                    err.style.display = 'block';
-                }
-
-            } else {
-                // REGISTER LOGIC
-                // check if user exists
-                var exists = false;
-                for (var i = 0; i < allUsers.length; i++) {
-                    if (allUsers[i].name === u) {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (exists) {
-                    err.innerText = "User already exists";
-                    err.style.display = 'block';
-                } else {
-                    // add new user
-                    allUsers.push({ name: u, pass: p });
-                    localStorage.setItem('users', JSON.stringify(allUsers));
-                    
-                    // auto login
-                    currentUser = u;
-                    localStorage.setItem('activeUser', u);
-                    showDashboard();
-                }
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('activeUser');
-            document.getElementById('dashboardSection').style.display = 'none';
-            document.getElementById('loginSection').style.display = 'block';
+        function render_chart(labels, values) {
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
             
-            // clear inputs
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function showDashboard() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('dashboardSection').style.display = 'block';
-            document.getElementById('displayUser').innerText = currentUser;
-
-            // load data specific to this user
-            loadData();
-            render();
-        }
-
-
-        // --- EXPENSE FUNCTIONS ---
-
-        // load expenses ONLY for current user
-        function loadData() {
-            // we use a unique key for each user: expenses_username
-            var key = 'expenses_' + currentUser;
-            expenseList = JSON.parse(localStorage.getItem(key)) || [];
-        }
-
-        function saveData() {
-            var key = 'expenses_' + currentUser;
-            localStorage.setItem(key, JSON.stringify(expenseList));
-        }
-
-        // handle form submit
-        document.getElementById('myForm').addEventListener('submit', function(event) {
-            event.preventDefault(); 
-
-            var d = document.getElementById('desc').value;
-            var a = document.getElementById('amt').value;
-            var c = document.getElementById('cat').value;
-            var dt = document.getElementById('dt').value;
-
-            var obj = {
-                desc: d,
-                amount: a,
-                category: c,
-                date: dt
-            };
-
-            expenseList.push(obj);
-
-            saveData();
-            render();
-            
-            document.getElementById('myForm').reset();
-        });
-
-        function remove(index) {
-            var check = confirm("Delete this?");
-            if (check) {
-                expenseList.splice(index, 1);
-                saveData();
-                render();
-            }
-        }
-
-        function render() {
-            var tbody = document.getElementById('tableData');
-            var msg = document.getElementById('noDataMsg');
-            var totalDisplay = document.getElementById('totalValue');
-            
-            tbody.innerHTML = "";
-            var sum = 0;
-
-            if (expenseList.length == 0) {
-                msg.style.display = 'block';
-            } else {
-                msg.style.display = 'none';
+            if (myPieChart) {
+                myPieChart.destroy();
             }
 
-            for (var i = 0; i < expenseList.length; i++) {
-                var item = expenseList[i];
-                var cost = parseFloat(item.amount);
-                sum = sum + cost;
-
-                var row = "<tr>" +
-                    "<td>" + item.date + "</td>" +
-                    "<td>" + item.desc + "</td>" +
-                    "<td>" + item.category + "</td>" +
-                    "<td>$" + cost + "</td>" +
-                    "<td><button class='del-btn' onclick='remove(" + i + ")'>X</button></td>" +
-                    "</tr>";
-                
-                tbody.innerHTML += row;
-            }
-
-            totalDisplay.innerHTML = sum.toFixed(2);
-            drawChart();
-        }
-
-        function drawChart() {
-            var ctx = document.getElementById('myChart');
-            
-            var food = 0;
-            var travel = 0;
-            var shop = 0;
-            var bills = 0;
-            var other = 0;
-
-            for(var i=0; i<expenseList.length; i++) {
-                var cat = expenseList[i].category;
-                var amt = parseFloat(expenseList[i].amount);
-
-                if(cat == "Food") food += amt;
-                else if(cat == "Travel") travel += amt;
-                else if(cat == "Shopping") shop += amt;
-                else if(cat == "Bills") bills += amt;
-                else other += amt;
-            }
-
-            if(myChart) {
-                myChart.destroy();
-            }
-
-            myChart = new Chart(ctx, {
-                type: 'pie',
+            myPieChart = new Chart(ctx, {
+                type: 'doughnut', // changed to doughnut, looks nicer
                 data: {
-                    labels: ['Food', 'Travel', 'Shopping', 'Bills', 'Other'],
+                    labels: labels,
                     datasets: [{
-                        data: [food, travel, shop, bills, other],
-                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+                        data: values,
+                        backgroundColor: ['#e74c3c', '#3498db', '#f1c40f', '#2ecc71', '#9b59b6']
                     }]
-                }
+                },
+                options: { responsive: true }
             });
         }
+    </script>
+
+    <script type="py">
+        from pyscript import document, window
+        from pyodide.ffi import create_proxy
+        import json
+
+        # global vars
+        signing_up = False
+        current_user = ""
+        my_data = []
+
+        # hide loading screen
+        document.getElementById("loading-screen").style.display = "none"
+
+        # check if already logged in
+        saved = window.localStorage.getItem('curr_user')
+        if saved:
+            current_user = saved
+            document.getElementById("login-view").style.display = "none"
+            document.getElementById("app-area").style.display = "block"
+            document.getElementById("user-display").innerText = current_user
+            # load items
+            load_db()
+
+        def switch_mode(e):
+            global signing_up
+            err = document.getElementById('error-txt')
+            err.style.display = 'none' # reset error
+
+            if signing_up:
+                # switch back to login
+                document.getElementById('header-title').innerText = "Login"
+                document.getElementById('mode-switch').innerText = "Create an account"
+                signing_up = False
+            else:
+                # switch to register
+                document.getElementById('header-title').innerText = "Register"
+                document.getElementById('mode-switch').innerText = "Back to Login"
+                signing_up = True
+
+        def try_auth(e):
+            global current_user
+            u = document.getElementById('user_input').value
+            p = document.getElementById('pass_input').value
+            err_box = document.getElementById('error-txt')
+
+            if u == "" or p == "":
+                err_box.innerText = "Please fill everything"
+                err_box.style.display = "block"
+                return
+
+            # get the list of users
+            raw = window.localStorage.getItem('app_users')
+            if raw:
+                users_db = json.loads(raw)
+            else:
+                users_db = []
+
+            if signing_up:
+                # check duplicates
+                for x in users_db:
+                    if x['u'] == u:
+                        err_box.innerText = "Username taken"
+                        err_box.style.display = "block"
+                        return
+                
+                # add new
+                users_db.append({'u': u, 'p': p})
+                window.localStorage.setItem('app_users', json.dumps(users_db))
+                
+                # auto login
+                do_login_success(u)
+            
+            else:
+                # try logging in
+                found = False
+                for x in users_db:
+                    if x['u'] == u and x['p'] == p:
+                        found = True
+                
+                if found:
+                    do_login_success(u)
+                else:
+                    err_box.innerText = "Wrong password or user"
+                    err_box.style.display = "block"
+
+        def do_login_success(name):
+            global current_user
+            current_user = name
+            window.localStorage.setItem('curr_user', name)
+            
+            document.getElementById("login-view").style.display = "none"
+            document.getElementById("app-area").style.display = "block"
+            document.getElementById("user-display").innerText = current_user
+            
+            # clear fields
+            document.getElementById('user_input').value = ""
+            document.getElementById('pass_input').value = ""
+            load_db()
+
+        def do_logout(e):
+            global current_user
+            window.localStorage.removeItem('curr_user')
+            current_user = ""
+            document.getElementById("app-area").style.display = "none"
+            document.getElementById("login-view").style.display = "block"
+
+        # --- Data Stuff ---
+
+        def load_db():
+            global my_data
+            key = 'data_' + current_user
+            
+            raw_data = window.localStorage.getItem(key)
+            if raw_data:
+                my_data = json.loads(raw_data)
+            else:
+                my_data = []
+            
+            update_ui()
+
+        def save_db():
+            key = 'data_' + current_user
+            window.localStorage.setItem(key, json.dumps(my_data))
+
+        def save_item(e):
+            d = document.getElementById('desc_field').value
+            a = document.getElementById('amt_field').value
+            c = document.getElementById('cat_field').value
+            date = document.getElementById('date_field').value
+
+            if d == "" or a == "" or date == "":
+                window.alert("Missing info!")
+                return
+
+            obj = {
+                "desc": d,
+                "val": float(a),
+                "cat": c,
+                "date": date
+            }
+
+            my_data.append(obj)
+            save_db()
+            update_ui()
+            
+            # reset inputs
+            document.getElementById('desc_field').value = ""
+            document.getElementById('amt_field').value = ""
+
+        # Need a proxy to call this from JS onclick
+        def remove_item(idx):
+            my_data.pop(idx)
+            save_db()
+            update_ui()
+
+        del_proxy = create_proxy(remove_item)
+        window.delete_entry = del_proxy
+
+        def update_ui():
+            # handle table
+            tbody = document.getElementById('table-body')
+            tbody.innerHTML = ""
+            
+            total_sum = 0
+            
+            # cats for graph
+            cat_map = {"Food":0, "Travel":0, "Shopping":0, "Bills":0, "Other":0}
+
+            if len(my_data) == 0:
+                document.getElementById('empty-msg').style.display = "block"
+            else:
+                document.getElementById('empty-msg').style.display = "none"
+
+            # loop with index
+            for i in range(len(my_data)):
+                item = my_data[i]
+                cost = float(item['val'])
+                total_sum += cost
+                
+                # add to category count
+                c_name = item['cat']
+                if c_name in cat_map:
+                    cat_map[c_name] += cost
+                else:
+                    cat_map['Other'] += cost
+
+                # make HTML row
+                row = document.createElement("tr")
+                row.innerHTML = f"""
+                    <td>{item['date']}</td>
+                    <td>{item['desc']}</td>
+                    <td>{item['cat']}</td>
+                    <td>${cost}</td>
+                    <td><button class='del-btn' onclick='window.delete_entry({i})'>x</button></td>
+                """
+                tbody.appendChild(row)
+
+            # update text
+            document.getElementById('grand-total').innerText = str(round(total_sum, 2))
+            
+            # update chart
+            keys = list(cat_map.keys())
+            vals = list(cat_map.values())
+            window.render_chart(keys, vals)
+
     </script>
 </body>
 </html>
